@@ -4,7 +4,6 @@
 #include "esp_wifi.h"
 #include "esp_netif.h"
 #include "nvs_flash.h"
-#include "esp_eap_client.h"
 
 static const char *TAG = "wifi_enterprise";
 
@@ -43,17 +42,13 @@ void wifi_init() {
     wifi_config_t wifi_config = {
         .sta = {
             .ssid = WIFI_SSID,
+            .password = WIFI_PASSWORD,
+            .threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE,
         },
     };
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
-
-    // WPA2-Enterprise Configuration (For ESP-IDF v5.3+)
-    esp_eap_client_set_identity((uint8_t *)WIFI_IDENTITY, strlen(WIFI_IDENTITY));
-    esp_eap_client_set_username((uint8_t *)WIFI_IDENTITY, strlen(WIFI_IDENTITY));
-    esp_eap_client_set_password((uint8_t *)WIFI_PASSWORD, strlen(WIFI_PASSWORD));
-    esp_eap_client_enable();
 
     ESP_ERROR_CHECK(esp_wifi_start());
     ESP_ERROR_CHECK(esp_wifi_connect());

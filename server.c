@@ -16,6 +16,7 @@ static esp_err_t control_handler(httpd_req_t *req) {
 void start_web_server() {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     httpd_handle_t server = NULL;
+    config.server_port = 80; // Change this to your preferred port (default is 80)
     httpd_start(&server, &config);
     httpd_uri_t uri = {
         .uri = "/control",
